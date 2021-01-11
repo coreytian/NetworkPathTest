@@ -24,6 +24,8 @@ E,F,1000
 ```
 Please make sure the CSV file format is valid as currently this tool is not validating it.
 
+There is a test CVS file named test.csv in the project root.
+
 ## Run
 
 Run the following command in project root.
