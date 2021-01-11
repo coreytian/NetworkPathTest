@@ -1,4 +1,4 @@
-# NetworkPathTest
+# Network Path Test
 
 A PHP command line tool that helps to detect the path between two devices(nodes) with a time contraint in a given network.
 
