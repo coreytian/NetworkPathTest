@@ -19,7 +19,7 @@ while($line = trim(fgets($handle))){
     // TODO: Verify the input format and value
     $lineVars = explode(' ', $line);
     //var_dump($lineVars);
-    $networkPath->findPath(); 
+    $networkPath->findPath($lineVars[0], $lineVars[1], $lineVars[2]); 
     echo "\n";
 }
 
