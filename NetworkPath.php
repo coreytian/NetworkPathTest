@@ -4,15 +4,22 @@ class NetworkPath {
     protected $connectionsData;
 
     /**
-     * Load the csv file data and store the connections data into an array
-     * e.g. $this->connectionsData["A"]["B"] = 10;
+     * Load the csv file data and store the connections data into an array.
+     * e.g. $connectionsData["A"]["B"] = 10;
+     * The two nodes in the connection array is in the alphabetical order.
+     * e.g. can have $connectionsData["A"]["B"], but not $connectionsData["B"]["A"]
      *
      * @param string       $filePath  The csv file path
      */
     public function loadCSV($filePath){
         $file = fopen($filePath, 'r');
         while (($line = fgetcsv($file)) !== FALSE) {
-            $this->connectionsData[$line[0]][$line[1]] = $line[2];
+            // Sort the order of the two nodes in a connection
+            if(strcmp($line[0],$line[1])<0){
+                $this->connectionsData[$line[0]][$line[1]] = $line[2];
+               }else{
+                $this->connectionsData[$line[1]][$line[0]] = $line[2];
+            }
         }
         //var_dump($this->csvData);
         fclose($file);
@@ -21,46 +28,60 @@ class NetworkPath {
     /**
      * Find the first path between two nodes within the maximum time
      *
-     * @param string       $from    The source node name
-     * @param string       $to      The target node name
-     * @param int          $maxTime The maximum time allowed to travel the path   
+     * @param string       $source    The source node name
+     * @param string       $target    The target node name
+     * @param int          $maxTime   The maximum time allowed to travel the path   
      */
-    public function findPath($from, $to, $maxTime){
-        
+    public function findPath($source, $target, $maxTime){
+        // Sort the two nodes of path in alphabetical order
+        if(strcmp($source,$target)<0){
+            $from = $source;
+            $to = $target;
+        }else{
+            $from = $target;
+            $to = $source;
+        }
+
         $output = '';
         $totalTime= 0;
-        if($path = $this->checkNextNode($from, $to, $maxTime,  0)){
-           
-            var_dump($path);
+        if($path = $this->checkNode($from, $to, $maxTime)){
+            if($source == $path['nodes'][0]){
+               
+            }else{
+                $path['nodes'] = array_reverse($path['nodes']);
+            
+            }
+            $output = implode(' => ', $path['nodes']);
+            $output .= ' => '.$path['time'];
+            echo $output; 
         }else{
-            echo "\nPath not found";
+            echo "Path not found";
         }
     }
 
     /**
-     * Traverse all the nodes in the connections data until the target node is 
-     * detected. 
+     * Check all the direct connections of the $from node and see if it is connecting to target node 
      *
-     * @param string       $from     The source node name
+     * @param string       $from     The node to be checked 
      * @param string       $to       The target node name
      * @param int          $restTime The maximum time left for the rest of path
      * 
      * @return array|void  Return an array that contains path info if a path is found. Otherwise return void.  
      */
-    protected function checkNextNode($from, $to, $restTime){
+    protected function checkNode($from, $to, $restTime){
         // Check all the connected nodes in a recusive way
         foreach($this->connectionsData[$from] as $node => $time){
-            // A path is found when it reaches the target node within the max time left
+            // When the connected node is the target node, the path is found
             if($node == $to && $time <= $restTime){
                 $path = ['nodes'=>[$from, $to],'time'=>$time];
                 return $path;
-            }elseif($time < $restTime){ // The connected node is not the target, run the same function on the connected node 
-                if($path = $this->checkNextNode($node, $to, $restTime-$time)){
+            }elseif($time < $restTime){ // The connected node is not the target node, keep checking this connected node
+                if($path = $this->checkNode($node, $to, $restTime-$time)){
                     array_unshift($path['nodes'], $from);
                     $path['time'] += $time;
                     return $path;
                 }
-            }else{ 
+            }else{ // No time left for this path, go check next connected node
                 continue;
             }
         }
