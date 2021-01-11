@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * NetworkPath class that helps to detect the path between two given devices(nodes) that 
+ * meets the time constraint.
+ *
+ * @author Corey Tian <haohetian@gmail.com>
+ */
 class NetworkPath {
     protected $connectionsData;
 
@@ -13,6 +19,9 @@ class NetworkPath {
      */
     public function loadCSV($filePath){
         $file = fopen($filePath, 'r');
+        if(!$file){
+            throw new Exception('Cannot find the file.');
+        }
         while (($line = fgetcsv($file)) !== FALSE) {
             // Sort the order of the two nodes in a connection
             if(strcmp($line[0],$line[1])<0){
@@ -43,20 +52,16 @@ class NetworkPath {
         }
 
         $output = '';
-        $totalTime= 0;
         if($path = $this->checkNode($from, $to, $maxTime)){
-            if($source == $path['nodes'][0]){
-               
-            }else{
+            if($source != $path['nodes'][0]){
                 $path['nodes'] = array_reverse($path['nodes']);
-            
             }
             $output = implode(' => ', $path['nodes']);
             $output .= ' => '.$path['time'];
-            echo $output; 
         }else{
-            echo "Path not found";
+            $output = "Path not found";
         }
+        return $output;
     }
 
     /**
@@ -66,7 +71,7 @@ class NetworkPath {
      * @param string       $to       The target node name
      * @param int          $restTime The maximum time left for the rest of path
      * 
-     * @return array|void  Return an array that contains path info if a path is found. Otherwise return void.  
+     * @return array       Return an array that contains path info if a path is found. Otherwise return void.  
      */
     protected function checkNode($from, $to, $restTime){
         // Check all the connected nodes in a recusive way
