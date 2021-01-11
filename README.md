@@ -33,13 +33,13 @@ Run the following command in project root.
 ```
 php console.php your_csv_file_path
 ```
-Then you can then enter the path you wanted to check in this format: Node Node Time 
+Then you can enter the path you want to check in this format: `Node Node Time`
 
 ```
 A B 100
 ```
 
-Enter QUIT/quit to terminate the tool.
+Enter `QUIT` or `quit` to terminate the tool.
 
 ## Sample Input / Output (based on above CSV data):
 
