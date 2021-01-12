@@ -7,6 +7,7 @@ The tool will only return first path that meets the time constraint.
 ## Requirements
 
 * PHP >= 5.3
+* Composer
 
 ## CSV file
 
@@ -26,7 +27,13 @@ Please make sure the CSV file format is valid as currently this tool is not vali
 
 There is a test CVS file named test.csv in the project root.
 
-## Run
+## Setup and Run
+
+Clone the project and install the dependencies: 
+
+```
+composer install
+```
 
 Run the following command in project root.
 
@@ -58,4 +65,10 @@ Output: E => D => B => A => 120
 
 Input: E A 80 
 Output: E => D => C => A => 60
+```
+
+### Run unit test
+
+```
+./vendor/bin/phpunit
 ```
