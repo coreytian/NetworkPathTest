@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 /**
  * NetworkPath class that helps to detect the path between two given devices(nodes) that 
  * meets the time constraint.
