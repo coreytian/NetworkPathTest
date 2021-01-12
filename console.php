@@ -1,12 +1,12 @@
 <?php
-require('NetworkPath.php');
+require('./vendor/autoload.php');
 
 $filePath = $argv[1];
 if(empty($filePath)){
     exit("Please enter the CSV file path as an argument.\n");
 }
 
-$networkPath =  new NetworkPath();
+$networkPath =  new App\NetworkPath();
 try{
     $networkPath->loadCSV($filePath);
 }catch(Exception $e){
